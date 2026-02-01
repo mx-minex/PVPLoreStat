@@ -1,0 +1,114 @@
+name: Initialize Template
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  init:
+    # 템플릿 레포지토리 자체에서는 실행하지 않음
+    if: github.repository != 'mx-minex/spigot-plugin-template'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 초기화 여부 확인
+        id: check
+        run: |
+          if [ -f ".initialized" ]; then
+            echo "SKIP=true" >> $GITHUB_OUTPUT
+          else
+            echo "SKIP=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 레포지토리 이름에서 플러그인 정보 추출
+        if: steps.check.outputs.SKIP == 'false'
+        id: info
+        run: |
+          # 레포 이름 추출 (mx-minex/MyPlugin -> MyPlugin)
+          REPO_NAME="${{ github.repository }}"
+          PLUGIN_NAME="${REPO_NAME##*/}"
+
+          # 패키지명 생성 (MyPlugin -> myplugin)
+          PACKAGE_NAME=$(echo "$PLUGIN_NAME" | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')
+
+          echo "PLUGIN_NAME=$PLUGIN_NAME" >> $GITHUB_OUTPUT
+          echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_OUTPUT
+          echo "플러그인명: $PLUGIN_NAME"
+          echo "패키지명: kr.minex.$PACKAGE_NAME"
+
+      - name: 디렉토리 구조 변경
+        if: steps.check.outputs.SKIP == 'false'
+        run: |
+          PACKAGE_NAME="${{ steps.info.outputs.PACKAGE_NAME }}"
+
+          # 새 패키지 디렉토리 생성
+          mkdir -p "src/main/java/kr/minex/$PACKAGE_NAME"
+          mkdir -p "src/test/java/kr/minex/$PACKAGE_NAME"
+
+          # 파일 이동
+          if [ -d "src/main/java/kr/minex/template" ]; then
+            mv src/main/java/kr/minex/template/* "src/main/java/kr/minex/$PACKAGE_NAME/" 2>/dev/null || true
+            rm -rf src/main/java/kr/minex/template
+          fi
+
+          if [ -d "src/test/java/kr/minex/template" ]; then
+            mv src/test/java/kr/minex/template/* "src/test/java/kr/minex/$PACKAGE_NAME/" 2>/dev/null || true
+            rm -rf src/test/java/kr/minex/template
+          fi
+
+      - name: 플레이스홀더 치환
+        if: steps.check.outputs.SKIP == 'false'
+        run: |
+          PLUGIN_NAME="${{ steps.info.outputs.PLUGIN_NAME }}"
+          PACKAGE_NAME="${{ steps.info.outputs.PACKAGE_NAME }}"
+
+          # 모든 파일에서 플레이스홀더 치환
+          find . -type f \( -name "*.java" -o -name "*.yml" -o -name "*.gradle" -o -name "*.md" \) \
+            -not -path "./.git/*" \
+            -exec sed -i "s/TEMPLATE_PLUGIN_NAME/$PLUGIN_NAME/g" {} \;
+
+          find . -type f \( -name "*.java" -o -name "*.yml" -o -name "*.gradle" -o -name "*.md" \) \
+            -not -path "./.git/*" \
+            -exec sed -i "s/kr\.minex\.template/kr.minex.$PACKAGE_NAME/g" {} \;
+
+          find . -type f \( -name "*.java" -o -name "*.yml" -o -name "*.gradle" -o -name "*.md" \) \
+            -not -path "./.git/*" \
+            -exec sed -i "s/template\.command/$PACKAGE_NAME.command/g" {} \;
+
+          find . -type f \( -name "*.java" -o -name "*.yml" -o -name "*.gradle" -o -name "*.md" \) \
+            -not -path "./.git/*" \
+            -exec sed -i "s/template\.admin/$PACKAGE_NAME.admin/g" {} \;
+
+          # 메인 클래스 파일명 변경
+          if [ -f "src/main/java/kr/minex/$PACKAGE_NAME/TEMPLATE_PLUGIN_NAME.java" ]; then
+            mv "src/main/java/kr/minex/$PACKAGE_NAME/TEMPLATE_PLUGIN_NAME.java" \
+               "src/main/java/kr/minex/$PACKAGE_NAME/$PLUGIN_NAME.java"
+          fi
+
+      - name: 초기화 완료 표시 및 워크플로우 정리
+        if: steps.check.outputs.SKIP == 'false'
+        run: |
+          # 초기화 완료 표시
+          touch .initialized
+
+          # 이 초기화 워크플로우 삭제
+          rm -f .github/workflows/init-template.yml
+
+      - name: 변경사항 커밋
+        if: steps.check.outputs.SKIP == 'false'
+        run: |
+          PLUGIN_NAME="${{ steps.info.outputs.PLUGIN_NAME }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: $PLUGIN_NAME 프로젝트 초기화"
+          git push

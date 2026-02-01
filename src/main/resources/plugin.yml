@@ -1,0 +1,32 @@
+name: TEMPLATE_PLUGIN_NAME
+version: '${version}'
+main: kr.minex.template.TEMPLATE_PLUGIN_NAME
+api-version: '1.20'
+authors:
+  - Minex
+website: https://github.com/mx-minex
+description: 플러그인 설명을 입력하세요
+
+# 명령어 정의
+commands:
+  template:
+    description: 플러그인 명령어
+    usage: /<command> [args]
+    permission: template.command
+
+# 권한 정의
+permissions:
+  template.*:
+    description: 모든 권한
+    default: op
+    children:
+      template.command: true
+      template.admin: true
+
+  template.command:
+    description: 기본 명령어 사용 권한
+    default: true
+
+  template.admin:
+    description: 관리자 권한
+    default: op
