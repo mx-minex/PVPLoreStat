@@ -6,9 +6,9 @@ plugins {
 group = 'kr.minex'
 version = findProperty('version') ?: '1.0.0-SNAPSHOT'
 
-// JAR 파일명 설정 (TEMPLATE_PLUGIN_NAME은 초기화 시 변경됨)
+// JAR 파일명 설정 (PVPLoreStat은 초기화 시 변경됨)
 base {
-    archivesName = 'TEMPLATE_PLUGIN_NAME'
+    archivesName = 'PVPLoreStat'
 }
 
 repositories {

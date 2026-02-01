@@ -1,17 +1,17 @@
-package kr.minex.template;
+package kr.minex.pvplorestat;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * TEMPLATE_PLUGIN_NAME 메인 플러그인 클래스
+ * PVPLoreStat 메인 플러그인 클래스
  *
  * @author Minex
  * @version 1.0.0
  * @since 1.0.0
  */
-public class TEMPLATE_PLUGIN_NAME extends JavaPlugin {
+public class PVPLoreStat extends JavaPlugin {
 
-    private static TEMPLATE_PLUGIN_NAME instance;
+    private static PVPLoreStat instance;
 
     @Override
     public void onEnable() {
@@ -30,7 +30,7 @@ public class TEMPLATE_PLUGIN_NAME extends JavaPlugin {
         registerCommands();
 
         getLogger().info("========================================");
-        getLogger().info("  TEMPLATE_PLUGIN_NAME Plugin v" + getDescription().getVersion());
+        getLogger().info("  PVPLoreStat Plugin v" + getDescription().getVersion());
         getLogger().info("  Created by Minex");
         getLogger().info("  https://github.com/mx-minex");
         getLogger().info("========================================");
@@ -56,7 +56,7 @@ public class TEMPLATE_PLUGIN_NAME extends JavaPlugin {
         // getCommand("template").setExecutor(new ExampleCommand(this));
     }
 
-    public static TEMPLATE_PLUGIN_NAME getInstance() {
+    public static PVPLoreStat getInstance() {
         return instance;
     }
 }
