@@ -1,0 +1,81 @@
+# PVPLoreStat v1.0.0 설정
+# https://github.com/mx-minex/PVPLoreStat
+
+# 일반 설정
+settings:
+  # 스탯 업데이트 간격 (틱, 20틱 = 1초)
+  update-interval: 10
+
+  # PVP만 적용 (false = PVE도 적용)
+  pvp-only: true
+
+  # 디버그 모드
+  debug: false
+
+# 스탯 계산 설정
+stats:
+  damage:
+    # 공격력 적용 비율 (공격력 / divisor = 추가 데미지)
+    divisor: 2.0
+    # 최대 공격력 (0 = 무제한)
+    max: 0
+
+  defense:
+    divisor: 2.0
+    max: 0
+
+  health:
+    # 체력 스탯은 그대로 최대 체력에 추가됩니다 (체력 10 = +10 체력)
+    max: 0
+    # 기본 최대 체력 (하트 수 * 2)
+    base: 20.0
+
+  lifesteal:
+    # 최대 피흡수율 (%)
+    max: 100
+
+  critchance:
+    # 최대 치명타 확률 (%)
+    max: 100
+
+  critdamage:
+    divisor: 2.0
+    max: 0
+
+  dodge:
+    # 최대 회피율 (%)
+    max: 80
+
+# 무기로 인식할 아이템 타입 (스탯 적용 대상)
+# 와일드카드(*) 지원: *_SWORD는 모든 검을 포함
+weapons:
+  - "*_SWORD"
+  - "*_AXE"
+
+# 로어 디자인
+lore:
+  # 구분선 설정
+  separator:
+    enabled: true
+    top: "&8&m─────&r &6✦ 스탯 &8&m─────"
+    bottom: "&8&m──────────────────"
+
+  # 스탯 표시 형식
+  format:
+    damage: "&c⚔ 공격력 &f+{value}"
+    defense: "&9🛡 방어력 &f+{value}"
+    health: "&6❤ 체력 &f+{value}"
+    lifesteal: "&4🩸 피흡수 &f{value}%"
+    critchance: "&e⚡ 치명타 확률 &f{value}%"
+    critdamage: "&5💥 치명타 데미지 &f+{value}"
+    dodge: "&b💨 회피율 &f{value}%"
+
+  # 스탯 표시 순서
+  order:
+    - damage
+    - defense
+    - health
+    - lifesteal
+    - critchance
+    - critdamage
+    - dodge
