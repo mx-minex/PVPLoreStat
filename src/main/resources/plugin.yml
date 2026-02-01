@@ -5,28 +5,61 @@ api-version: '1.20'
 authors:
   - Minex
 website: https://github.com/mx-minex
-description: 플러그인 설명을 입력하세요
+description: 아이템 로어 기반 PVP 스탯 시스템 플러그인
 
 # 명령어 정의
 commands:
-  template:
-    description: 플러그인 명령어
-    usage: /<command> [args]
-    permission: pvplorestat.command
+  pvplorestat:
+    description: PVPLoreStat 메인 명령어
+    usage: /<command> <set|remove|clear|edit|info|check|reload|help> [args]
+    aliases:
+      - pls
+      - 로어
+    permission: pvplorestat.use
 
 # 권한 정의
 permissions:
-  template.*:
-    description: 모든 권한
+  pvplorestat.*:
+    description: 모든 PVPLoreStat 권한
     default: op
     children:
-      pvplorestat.command: true
-      pvplorestat.admin: true
+      pvplorestat.use: true
+      pvplorestat.set: true
+      pvplorestat.remove: true
+      pvplorestat.clear: true
+      pvplorestat.edit: true
+      pvplorestat.info: true
+      pvplorestat.check: true
+      pvplorestat.reload: true
 
-  pvplorestat.command:
+  pvplorestat.use:
     description: 기본 명령어 사용 권한
     default: true
 
-  pvplorestat.admin:
-    description: 관리자 권한
+  pvplorestat.set:
+    description: 스탯 설정 권한
+    default: op
+
+  pvplorestat.remove:
+    description: 스탯 제거 권한
+    default: op
+
+  pvplorestat.clear:
+    description: 스탯 초기화 권한
+    default: op
+
+  pvplorestat.edit:
+    description: GUI 편집 권한
+    default: op
+
+  pvplorestat.info:
+    description: 아이템 스탯 확인 권한
+    default: true
+
+  pvplorestat.check:
+    description: 플레이어 스탯 확인 권한
+    default: true
+
+  pvplorestat.reload:
+    description: 설정 리로드 권한
     default: op
