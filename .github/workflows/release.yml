@@ -41,7 +41,7 @@ jobs:
       - name: 플러그인 이름 추출
         id: plugin
         run: |
-          PLUGIN_NAME=$(grep "archivesName" build.gradle | sed "s/.*'\(.*\)'/\1/")
+          PLUGIN_NAME=$(grep "archivesName" build.gradle | sed 's/.*[="]\([^"]*\)".*/\1/')
           echo "NAME=$PLUGIN_NAME" >> $GITHUB_OUTPUT
 
       - name: Gradle 빌드 권한 부여
